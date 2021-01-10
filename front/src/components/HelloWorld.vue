@@ -31,10 +31,21 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  created: function () {
+    console.log("あほー");
+    axios.get('/')
+      .then(response => {
+        console.log("成功！");
+        console.log(response.data) // mockData
+        console.log(response.status) // 200
+      })
   }
 }
 </script>
