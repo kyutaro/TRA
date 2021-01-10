@@ -3,21 +3,19 @@ module.exports = {
     devServer: {
         port: 8080,
         proxy: {
-          "/api/": {
+          "^/api": {
             target: "http://localhost:3000",
-            changeOrigin: true,
-            logLevel: 'debug'
+            logLevel: 'debug',
+            pathRewrite: { "^/api/": "/api/" }
           },
-          "/users": {
-            target: "http://localhost:3000/users",
-            changeOrigin: true,
-            logLevel: 'debug'
-          },
-          "/users/": {
-            target: "http://localhost:3000/users/",
-            changeOrigin: true,
-            logLevel: 'debug'
-          }
+          // "/users": {
+          //   target: "http://localhost:3000/users",
+          //   logLevel: 'debug'
+          // },
+          // "/users/": {
+          //   target: "http://localhost:3000/users/",
+          //   logLevel: 'debug'
+          // }
         }
       }
 }
