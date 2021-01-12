@@ -1,0 +1,41 @@
+project
+    category_id  
+        カラムID
+        INT
+    task
+        タスク
+        VARCHAR(255)
+    worktime
+        作業時間
+        INT
+        →もしくはworkIDみたいの作ってもいいのかも。
+    (status)
+        ステータス
+        TINYINT
+        1:未着手、2:進行中、3:完了
+    (deadline)
+        締切日
+        TIMESTAMP
+    (man_hour_estimate)
+        工数見積
+        MEDIUMINT
+    (start_date)
+        開始日時
+        TIMESTAMP
+    (end_date)
+        開始日時
+        TIMESTAMP
+    del_flg
+        削除フラグ
+        TINYINT
+
+category
+    categoryID カラムID
+    categoryName カラム名
+
+user
+    user_id 
+        ユーザーID
+    password
+        パスワード
+        
