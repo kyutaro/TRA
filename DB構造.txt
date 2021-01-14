@@ -30,12 +30,18 @@ project
         TINYINT
 
 category
-    categoryID カラムID
-    categoryName カラム名
+    categoryID
+        カラムID
+    categoryName
+        カラム名
 
 user
     user_id 
         ユーザーID
     password
         パスワード
+    user_name
+        ユーザー名
+    email
+        メールアドレス
         
