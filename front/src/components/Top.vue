@@ -1,12 +1,24 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <ul>
+  <div>
+    <h2>Project List</h2>
+    <div class="add-project" @click="addProject()">
+      <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">プロジェクトを追加する</span>
+    </div>
+    <ul class="project">
       <li>
-        <span>aaa</span>
+        <router-link to="/project">
+          <span>aaaaa</span>
+        </router-link>
       </li>
       <li>
-        <span>bbbbb</span>
+        <router-link to="/project">
+          <span>bbbbb</span>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/project">
+          <span>ccccc</span>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -21,7 +33,6 @@ export default {
     msg: String
   },
   created: function () {
-    console.log("あほー");
     axios.get('/api')
       .then(response => {
         console.log("成功！");
@@ -29,33 +40,43 @@ export default {
         console.log(response.status) // 200
         //console.log(response) // 200
       })
+  },
+  methods: {
+    addProject: function() {
+      console.log("プロジェクトを追加する処理");
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.add-project {
+  cursor: pointer;
+  margin: 30px auto;
+  width: 30%;
 }
-ul {
+
+.project {
   list-style-type: none;
   padding: 0;
   margin: 10px auto;
   text-align: left;
   width: 50vw;
 }
-li {
+
+.project li {
   margin: 10px 10px;
   padding: 0 0 0 0;
   height: 50px;
   vertical-align: middle;
 }
 
-li::before {
+.project li::before {
   background-image: url('../assets/project_icon.png');
   background-size: contain;
   background-repeat: no-repeat;
+  cursor: pointer;
   content: "";
   display: inline-block;
   height: 30px;
@@ -63,12 +84,12 @@ li::before {
   width: 30px;
 }
 
-span {
+.project li span {
   display: inline-block;
   padding: 9px 0 0 45px;
 }
 
-a {
-  color: #42b983;
+.project li a {
+  color: #d8d8d8;
 }
 </style>

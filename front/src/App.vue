@@ -1,20 +1,11 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <Top msg="Welcome to TRA"/>
+    <router-view />
   </div>
 </template>
 
-<script>
-import Top from './components/Top.vue'
-
-export default {
-  name: 'App',
-  components: {
-    Top
-  }
-}
-</script>
+<script></script>
 
 <style>
 #app {
@@ -25,4 +16,9 @@ export default {
   color: #d8d8d8;
   margin-top: 60px;
 }
+
+.ml10 {
+  margin-left: 10px !important;
+}
+
 </style>
