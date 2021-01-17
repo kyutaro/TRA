@@ -17,7 +17,7 @@ export default new Router({
       component: Top
     },
     {
-      path: '/project',
+      path: '/project/:project_id',
       name: 'Project',
       component: Project
     }

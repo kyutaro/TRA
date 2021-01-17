@@ -7,6 +7,9 @@
       </router-link>
     </div>
     <div class="allHour">総作業時間 00:00:00</div>
+    <div class="addCategory" @click="addCategory()">
+      <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">カテゴリーを追加する</span>
+    </div>
     <add-task></add-task>
     <ul class="task">
       <li class="task-list">
@@ -64,7 +67,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+import Const from './../const'
 import AddTask from "./AddTask.vue"
 
 export default {
@@ -95,6 +99,15 @@ export default {
       ]
     }
   },
+  created: function () {
+    axios.get( Const.API_PATH + '/project/init')
+      .then(response => {
+        console.log("成功！");
+        console.log(response.data) // mockData
+        console.log(response.status) // 200
+        //console.log(response) // 200
+      })
+  },
   methods: {
     openClose: function(id) {
       if(this.openCloseList[id].isHidden) {
@@ -111,15 +124,17 @@ export default {
     },
     start: function() {
       console.log("startの処理を行う");
+    },
+    addCategory: function() {
+      console.log("addCategoryの中です。");
+      axios.post( Const.API_PATH + '/category/add')
+        .then(response => {
+          console.log("post成功！")
+          console.log(response.data)
+          console.log(response.status)
+        })
     }
-  },
-  created: function() {
-    axios.get("/api").then((response) => {
-      console.log(response.data); // mockData
-      console.log(response.status); // 200
-      //console.log(response) // 200
-    });
-  },
+  }
 };
 </script>
 
@@ -166,6 +181,12 @@ export default {
 
 .allHour {
   font-size: 1.4rem;
+}
+
+.addCategory {
+  cursor: pointer;
+  margin: 10px auto;
+  width: 40%;
 }
 
 .task {

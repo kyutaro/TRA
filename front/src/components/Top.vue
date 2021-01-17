@@ -5,19 +5,9 @@
       <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">プロジェクトを追加する</span>
     </div>
     <ul class="project">
-      <li>
-        <router-link to="/project">
-          <span>aaaaa</span>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/project">
-          <span>bbbbb</span>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/project">
-          <span>ccccc</span>
+      <li v-for="project in projectList" :key="project.projectId">
+        <router-link :to="`/project/${project.projectId}`">
+          <span>{{ project.projectName }}</span>
         </router-link>
       </li>
     </ul>
@@ -26,14 +16,30 @@
 
 <script>
 import axios from 'axios'
+import Const from './../const'
 
 export default {
   name: 'Top',
-  props: {
-    msg: String
+  data: function() {
+    return {
+      projectList: [
+        {
+          projectId: 0,
+          projectName:'A_project'
+        },
+        {
+          projectId: 1,
+          projectName:'B_project'
+        },
+        {
+          projectId: 2,
+          projectName:'C_project'
+        }
+      ]
+    }
   },
   created: function () {
-    axios.get('/api')
+    axios.get('/api/v1')
       .then(response => {
         console.log("成功！");
         console.log(response.data) // mockData
@@ -43,7 +49,12 @@ export default {
   },
   methods: {
     addProject: function() {
-      console.log("プロジェクトを追加する処理");
+      axios.post( Const.API_PATH + '/project/add')
+        .then(response => {
+          console.log("post成功！")
+          console.log(response.data)
+          console.log(response.status)
+        })
     }
   }
 }
