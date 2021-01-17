@@ -1,40 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const systemLogger = require ('../config/log4js-config');
-// const projectController = require ('../controller/project');
+const projectController = require ('../controller/project');
 
 /* GET users listing. */
 router.get('/v1', function(req, res, next) {
   res.send('respond with a resource API');
 });
 
-const app = express();
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/TRA', { useNewUrlParser: true, useUnifiedTopology: true });
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended:false }));
-app.use(bodyParser.json());
+// const app = express();
+// const mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost:27017/TRA', { useNewUrlParser: true, useUnifiedTopology: true });
+// const bodyParser = require('body-parser');
+// app.use(bodyParser.urlencoded({ extended:false }));
+// app.use(bodyParser.json());
 
-const ProjectSchema = new mongoose.Schema({
-  project_id: Number,
-  // category_id: Number,
-  task: 'String',
-  worktime: 'String',
-  del_flg: Number
-});
-const Project = mongoose.model('Project', ProjectSchema);
-
-Project.find({task: "test"}, function(err, docs) {
-  if (err) console.error(err);
-  console.log(docs);
-  for (let val of docs) {
-    console.log(val);
-    mongoose.disconnect();
-  }
-    // systemLogger.debug("getProjectData：成功");
-    // systemLogger.debug(result);
-    // return res.json(result);
-});
+// const ProjectSchema = new mongoose.Schema({
+//   project_id: Number,
+//   // category_id: Number,
+//   task: 'String',
+//   worktime: 'String',
+//   del_flg: Number
+// });
+// const Project = mongoose.model('Project', ProjectSchema);
 
 // const projectSave = new Project({project_id:2, task:"test2", worktime:"00:00:00", del_flg:0});
 // projectSave.save(err => {
@@ -64,7 +52,7 @@ Project.find({task: "test"}, function(err, docs) {
 
 router.get('/v1/project/init', function(req, res, next) {
   systemLogger.debug("projectInitの中");
-//  let aa = projectController.getProjectData(res);
+  let aa = projectController.getProjectData(res);
   // Project.find({task: "test"}, function(err, docs) {
   //   if (err) console.error(err);
   //   console.log(docs);
@@ -72,12 +60,8 @@ router.get('/v1/project/init', function(req, res, next) {
   //     console.log(val);
   //     mongoose.disconnect();
   //   }
-
-  //     // systemLogger.debug("getProjectData：成功");
-  //     // systemLogger.debug(result);
-  //     // return res.json(result);
   // });
-  // res.send(aa);
+  res.send(aa);
 });
 
 router.post('/v1/project/add', function(req, res, next) {
