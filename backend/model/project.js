@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 
 const ProjectSchema = new mongoose.Schema({
-  project_id: Number,
-  // category_id: Number,
-  task: String,
-  worktime: String,
+  project_name: String,
+  category_id: Number,
+  task_id: Number,
   del_flg: Number
 });
 

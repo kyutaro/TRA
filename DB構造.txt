@@ -1,50 +1,67 @@
 project
-    project_id  
+    _id  
         プロジェクトID
-        INT
+        Number
+        ※mongoDBによって自動生成
+    project_name
+        プロジェクト名
+        String
     category_id  
         カラムID
-        INT
-    task
-        タスク
-        VARCHAR(255)
-    worktime
-        作業時間
-        INT
-        →もしくはworkIDみたいの作ってもいいのかも。
+        Number
+    task_id
+        タスクID
+        String
     (status)
         ステータス
-        TINYINT
-        1:未着手、2:進行中、3:完了
+        Number
+        1：未着手、2：進行中、3：完了
     (deadline)
         締切日
-        TIMESTAMP
+        String
     (man_hour_estimate)
         工数見積
-        MEDIUMINT
+        Number
     (start_date)
         開始日時
-        TIMESTAMP
+        Date
     (end_date)
-        開始日時
-        TIMESTAMP
+        終了日時
+        Date
     del_flg
         削除フラグ
-        TINYINT
+        Number
+        0：未削除、1：削除済み
+
+task
+    task_id
+        タスクID
+        Number
+    task_name
+        タスク名
+        String
+    worktime
+        作業時間
+        Date
 
 category
-    categoryID
+    category_id
         カラムID
-    categoryName
+        Number
+    category_name
         カラム名
+        String
 
 user
     user_id 
         ユーザーID
+        Number
     password
         パスワード
+        String
     user_name
         ユーザー名
+        String
     email
         メールアドレス
-        
+        String

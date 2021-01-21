@@ -1,34 +1,39 @@
-const express = require('express');
-const app = express();
 const systemLogger = require ('../config/log4js-config');
+const Const = require ('../config/const');
 const mongoose = require('mongoose');
 const Project = require('./../model/project');
 
-// const bodyParser = require('body-parser');
-// app.use(bodyParser.urlencoded({ extended:false }));
-// app.use(bodyParser.json());
-
 module.exports = {
-  getProjectData: function (res) {
-    mongoose.connect('mongodb://localhost:27017/TRA', { useNewUrlParser: true, useUnifiedTopology: true });
+  getProjectDList: function (res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
     
-    Project.find({task: "test"}, (err, ret) => {
+    Project.find({del_flg: 0}, (err, ret) => {
       if (err) console.error(err);
-      for (let val of ret) {
-        console.log("中身：");
-        console.log(val);
-      }
+      mongoose.disconnect();
+      return res.send(ret);
+    });
+  },
+  
+  getProjectData: function (res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+    
+    Project.find({del_flg: 0}, (err, ret) => {
+      if (err) console.error(err);
       mongoose.disconnect();
       return res.send(ret);
 
     });
   },
-  addProject: function (res) {
-    const projectSave = new Project({project_id:2, task:"test2", worktime:"00:00:00", del_flg:0});
-    projectSave.save(err => {
+
+  addProject: function (req, res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    const projectSave = new Project({ project_name: req.body.addProjectName, del_flg: 0 });
+    projectSave.save((err, ret) => {
       if (err) console.error(err)
-      console.log('saved')
+      console.log(ret)
       mongoose.disconnect();
+      return res.send(ret);
     });
   }
 };

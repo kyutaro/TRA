@@ -1,60 +1,99 @@
 <template>
   <div>
+    <Modal @close="closeModal" v-if="modal"></Modal>
     <h2>Project List</h2>
-    <div class="add-project" @click="addProject()">
-      <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">プロジェクトを追加する</span>
+    <div class="display-add-project" @click="displayAddProject()">
+      <font-awesome-icon :icon="['fas', 'plus']" v-bind:class="{displayNone: displayAddProjectFlg}" />
+      <font-awesome-icon :icon="['fas', 'minus']" v-bind:class="{displayNone: hiddenAddProjectFlg}" />
+      <span class="ml10">プロジェクトを追加する</span>
     </div>
-    <ul class="project">
+    <div class="add-project-action" v-bind:class="{display_add_project: displayAddProjectFlg, nondisplay_add_project: hiddenAddProjectFlg}">
+      <input id="add-project-name" type="text" class="add-project-name">
+      <button class="add-project-button" @click="addProject()">追加</button>
+    </div>
+    <ul id="project" class="project" v-if="projectList != ''">
       <li v-for="project in projectList" :key="project.projectId">
         <router-link :to="`/project/${project.projectId}`">
           <span>{{ project.projectName }}</span>
         </router-link>
       </li>
     </ul>
+    <div class="error" v-if="apiErrFlg">
+      <p>
+
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import Const from './../const'
+import Modal from "./Modal.vue"
 
 export default {
   name: 'Top',
   data: function() {
     return {
-      projectList: [
-        {
-          projectId: 0,
-          projectName:'A_project'
-        },
-        {
-          projectId: 1,
-          projectName:'B_project'
-        },
-        {
-          projectId: 2,
-          projectName:'C_project'
-        }
-      ]
+      projectList: [], /* DBから取得 */
+      apiErrFlg: false,
+      displayAddProjectFlg: false,
+      hiddenAddProjectFlg: true,
+      modal: false,
+      message: ''
     }
+  },
+  components: {
+    Modal
   },
   created: function () {
     axios.get('/api/v1')
       .then(response => {
-        console.log("成功！");
-        console.log(response.data) // mockData
-        console.log(response.status) // 200
-        //console.log(response) // 200
+        response.data.forEach(element => {
+          this.projectList.push({
+            projectId: element._id.toString(),
+            projectName: element.project_name
+          })
+        })
+      })
+      .catch(err => {
+        this.apiErrFlg = true
+        this.openModal()
+        throw err
       })
   },
   methods: {
+    displayAddProject: function() {
+      if(this.displayAddProjectFlg) {
+        this.displayAddProjectFlg = false,
+        this.hiddenAddProjectFlg = true
+      } else {
+        this.displayAddProjectFlg = true,
+        this.hiddenAddProjectFlg = false
+      }
+    },
     addProject: function() {
-      axios.post( Const.API_PATH + '/project/add')
-        .then(response => {
-          console.log("post成功！")
-          console.log(response.data)
-          console.log(response.status)
+      let addProjectName = document.getElementById('add-project-name').value;
+      console.log(addProjectName);
+      axios.post( Const.API_PATH + '/project/add', {
+        addProjectName: addProjectName
+      })
+      .then(response => {
+        console.log("post成功！")
+        console.log(response.status)
+        this.projectList.push({
+          projectId: response.data._id,
+          projectName: response.data.project_name
         })
+      })
+      .catch(err => {
+        this.apiErrFlg = true
+        this.openModal()
+        throw err
+      })
+    },
+    openModal() {
+      this.modal = true
     }
   }
 }
@@ -62,10 +101,57 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.add-project {
+.display-add-project {
   cursor: pointer;
-  margin: 30px auto;
+  margin: 10px auto;
   width: 30%;
+}
+
+.add-project-action {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  margin: 0 auto;
+  width: 30%;
+}
+
+.nondisplay_add_project {
+    height: 0;
+    padding: 0;
+    opacity: 0;
+    transition: height 0.4s;
+    visibility: hidden;
+}
+
+.display_add_project {
+  height: 40px;
+  opacity: 1;
+  visibility: visible;
+  transition: .2s;
+}
+
+.add-project-name {
+    border: 2px solid #ddd;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 16px;
+    height: 30px;
+    padding: 5px 15px;
+    margin: 5px 0 0 0;
+}
+
+.add-project-button {
+    background-color: #eb6100;
+    border-radius: 0.5rem;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    height: 40px;
+    letter-spacing: 0.15em;
+    padding: 0 1rem;
+    width: 100px;
 }
 
 .project {
@@ -102,5 +188,13 @@ export default {
 
 .project li a {
   color: #d8d8d8;
+}
+
+.error {
+  line-height: 1.8rem;
+  margin: 10px auto;
+  padding: 0;
+  text-align: left;
+  width: 45vw;
 }
 </style>

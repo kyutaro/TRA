@@ -5,17 +5,18 @@ const projectController = require ('../controller/project');
 
 /* GET users listing. */
 router.get('/v1', function(req, res, next) {
-  res.send('respond with a resource API');
+  systemLogger.debug("TOPの中");
+  projectController.getProjectDList(res);
 });
 
 router.get('/v1/project/init', function(req, res, next) {
   systemLogger.debug("projectInitの中");
-  projectController.getProjectData(res);  
+  projectController.getProjectData(res);
 });
 
 router.post('/v1/project/add', function(req, res, next) {
   systemLogger.debug("projectAddの中");
-  res.send('/project/addのAPIの応答に成功しました！');
+  projectController.addProject(req, res);
 });
 
 router.post('/v1/category/add', function(req, res, next) {

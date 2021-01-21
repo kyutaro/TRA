@@ -21,4 +21,8 @@
   margin-left: 10px !important;
 }
 
+.displayNone {
+  display: none;
+}
+
 </style>
