@@ -1,8 +1,12 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-const CategoriesSchema = new mongoose.Schema({
-  category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Tasks' },
-  project_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Projects' },
+const CategoriesSchema = new Schema({
+  projects: {
+    type: Schema.Types.ObjectId,
+    ref: 'Projects' 
+  },
+  category_id: Number,
   category_name: String,
   del_flg: Number
 });

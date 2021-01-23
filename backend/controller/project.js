@@ -1,9 +1,8 @@
 const systemLogger = require ('../config/log4js-config');
 const Const = require ('../config/const');
 const mongoose = require('mongoose');
-const Projects = require('./../model/projects').Projects;
-const Categories = require('./../model/projects').Categories;
-// const Categories = require('./../model/categories');
+const Projects = require('./../model/projects');
+const Categories = require('./../model/categories');
 
 module.exports = {
   getProjectDList: function (res) {
@@ -20,57 +19,12 @@ module.exports = {
   getProjectData: function (req, res) {
     mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    // const projects = new Projects({
-    //   _id: new mongoose.Types.ObjectId(),
-    //   project_id: 1,
-    //   project_name: 'Ian Fleming',
-    //   del_flg: 0,
-    // });
-    
-    // projects.save(function (err) {
-    //   if (err) return handleError(err);
-    
-    //   console.log("うおおん");
-    //   console.log(projects);
-    //   const categories1 = new Categories({
-    //     projects: projects._id,
-    //     category_id: 1,
-    //     category_name: 'Casino Royale',
-    //     del_flg: 0
-    //   });
-    
-    //   categories1.save(function (err) {
-    //     if (err) return handleError(err);
-    //     // that's it!
-    //   });
-    // });
-
-
-    // Projects.find({project_id : req.body.projectId}, (err, ret) => {
-    //   if (err) console.error(err);
-    //   mongoose.disconnect();
-    //   console.log(ret)
-    //   return res.send(ret);
-    // });
-
-    // Categories.find({ category_name: 'Casino Royale' }, (err, ret) => {
-    //   if (err) console.error(err);
-    //   mongoose.disconnect();
-    //   console.log(ret)
-    //   return res.send(ret);
-    // });
-
-
-    // console.log("ぺぺおおおん")
-    // console.log(req.body)
     Categories
-    .findOne({ category_name: 'Casino Royale' })
+    .find({ projects: req.body.projectId })
     .populate('projects')
-    .exec(function (err, story) {
+    .exec(function (err, ret) {
       if (err) return handleError(err);
-      console.log(story);
-      // console.log('The author is %s', story.categories.category_name);
-      // prints "The author is Ian Fleming"
+      console.log(ret);
     });
 
     // const Schema = mongoose.Schema;
@@ -119,6 +73,49 @@ module.exports = {
   //   // prints "The author is Ian Fleming"
   // });
 
+  },
+
+  saveProjectAndCategory: function (res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    const projects = new Projects({
+      _id: new mongoose.Types.ObjectId(),
+      project_id: 2,
+      project_name: 'Alan Smith',
+      del_flg: 0,
+    });
+    
+    projects.save(function (err) {
+      if (err) console.log(err);
+    
+      const categories1 = new Categories({
+        projects: projects._id,
+        category_id: 2,
+        category_name: 'Alan Royale',
+        del_flg: 0
+      });
+    
+      categories1.save(function (err, ret) {
+        if (err) console.log(err);
+        return res.send(ret);
+      });
+    });
+  },
+
+  saveCategory: function (res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    const categories = new Categories({
+      projects: '600b94d3ab53021f74fdbaee',
+      category_id: 3,
+      category_name: 'Alan Alan Alan',
+      del_flg: 0
+    });
+    
+    categories.save(function (err, ret) {
+      if (err) console.log(err);
+      return res.send(ret);
+    });
   },
 
   addProject: function (req, res) {

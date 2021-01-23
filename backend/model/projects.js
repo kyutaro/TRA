@@ -12,17 +12,4 @@ const ProjectsSchema = new Schema({
   }]
 });
 
-const CategoriesSchema = new Schema({
-  projects: {
-    type: Schema.Types.ObjectId,
-    ref: 'Projects' 
-  },
-  category_id: Number,
-  category_name: String,
-  del_flg: Number
-});
-
-const Projects = mongoose.model('Projects', ProjectsSchema);
-const Categories = mongoose.model('Categories', CategoriesSchema);
-
-module.exports = {Projects, Categories}
+module.exports = mongoose.model('Projects', ProjectsSchema);
