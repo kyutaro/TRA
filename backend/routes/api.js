@@ -9,9 +9,9 @@ router.get('/v1', function(req, res, next) {
   projectController.getProjectDList(res);
 });
 
-router.get('/v1/project/init', function(req, res, next) {
+router.post('/v1/project/init', function(req, res, next) {
   systemLogger.debug("projectInitの中");
-  projectController.getProjectData(res);
+  projectController.getProjectData(req, res);
 });
 
 router.post('/v1/project/add', function(req, res, next) {

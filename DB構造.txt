@@ -1,16 +1,10 @@
-project
+projects
     _id  
         プロジェクトID
         Number
         ※mongoDBによって自動生成
     project_name
         プロジェクト名
-        String
-    category_id  
-        カラムID
-        Number
-    task_id
-        タスクID
         String
     (status)
         ステータス
@@ -33,9 +27,27 @@ project
         Number
         0：未削除、1：削除済み
 
-task
-    task_id
+categories
+    _id
         タスクID
+        Number
+    project_id
+        プロジェクトID
+        Number
+    category_name
+        カラム名
+        String
+    del_flg
+        削除フラグ
+        Number
+        0：未削除、1：削除済み
+        
+tasks
+    _id
+        タスクID
+        Number
+    catgory_id
+        プロジェクトID
         Number
     task_name
         タスク名
@@ -43,16 +55,12 @@ task
     worktime
         作業時間
         Date
-
-category
-    category_id
-        カラムID
+    del_flg
+        削除フラグ
         Number
-    category_name
-        カラム名
-        String
+        0：未削除、1：削除済み
 
-user
+users
     user_id 
         ユーザーID
         Number
