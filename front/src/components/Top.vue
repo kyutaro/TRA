@@ -52,7 +52,7 @@ export default {
         console.log(response.status)
         response.data.forEach(element => {
           this.projectList.push({
-            projectId: element.project_id,
+            projectId: element._id,
             projectName: element.project_name
           })
         })
