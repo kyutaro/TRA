@@ -49,9 +49,10 @@ export default {
   created: function () {
     axios.get('/api/v1')
       .then(response => {
+        console.log(response.status)
         response.data.forEach(element => {
           this.projectList.push({
-            projectId: element._id.toString(),
+            projectId: element.project_id,
             projectName: element.project_name
           })
         })
@@ -74,15 +75,13 @@ export default {
     },
     addProject: function() {
       let addProjectName = document.getElementById('add-project-name').value;
-      console.log(addProjectName);
       axios.post( Const.API_PATH + '/project/add', {
         addProjectName: addProjectName
       })
       .then(response => {
-        console.log("post成功！")
         console.log(response.status)
         this.projectList.push({
-          projectId: response.data._id,
+          projectId: response.data.project_id,
           projectName: response.data.project_name
         })
       })

@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <h2>Project List</h2>
+    <h2>{{ projectName }}</h2>
     <div class="return">
       <router-link to="/" class="btn-return">
         <font-awesome-icon :icon="['fas', 'angle-left']" />
@@ -81,6 +81,7 @@ export default {
   },
   data: function() {
     return {
+      projectName: '',
       openCloseList: [
         { 
           id: 0,
@@ -100,12 +101,12 @@ export default {
     }
   },
   created: function () {
-    axios.get( Const.API_PATH + '/project/init')
+    let result = this.$route.path.slice(9)
+    axios.post( Const.API_PATH + '/project/init', {
+        projectId: result
+      })
       .then(response => {
-        console.log("成功！");
-        console.log(response.data) // mockData
-        console.log(response.status) // 200
-        //console.log(response) // 200
+        this.projectName = response.data[0].project_name
       })
   },
   methods: {
@@ -123,14 +124,12 @@ export default {
       }
     },
     start: function() {
-      console.log("startの処理を行う");
+      console.log("startの処理を行う")
     },
     addCategory: function() {
-      console.log("addCategoryの中です。");
+      console.log("addCategoryの中です。")
       axios.post( Const.API_PATH + '/category/add')
         .then(response => {
-          console.log("post成功！")
-          console.log(response.data)
           console.log(response.status)
         })
     }

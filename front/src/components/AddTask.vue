@@ -15,11 +15,8 @@ export default {
   },
   methods: {
     addTask: function() {
-      console.log("addTaskの中です。");
       axios.post( Const.API_PATH + '/task/add')
         .then(response => {
-          console.log("post成功！")
-          console.log(response.data)
           console.log(response.status)
         })
     }
