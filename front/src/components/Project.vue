@@ -10,52 +10,24 @@
     <div class="addCategory" @click="addCategory()">
       <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">カテゴリーを追加する</span>
     </div>
-    <add-task></add-task>
     <ul class="task">
-      <li class="task-list">
-        <div>
-          <span class="task-list-text">bbbbb：aaaaa</span>
-        </div>
-        <div class="task-detail">
-          <div class="hour">
-            作業時間：00:00:00
-          </div>
-          <div>
-            <span class="btn-start" @click="start()">start</span>
-          </div>
-        </div>
-      </li>
-      <li >
       <li v-for="item in openCloseList" :key="item.id" class="category-list">
         <div v-bind:class="{category_list_close: item.isClose, category_list_open: item.isOpen}" @click="openClose(item.id)">
-          <span class="task-list-text">bbb</span>
+          <span class="task-list-text">{{ item.category_name }}</span>
         </div>
         <div v-bind:class="{category_task_hidden: item.isHidden, category_task_display: item.isDisplay}">
           <add-task></add-task>
           <ul class="category-task">
-            <li class="category-task-list">
+            <li v-for="task in item.taskList" :key="task._id" class="category-task-list">
               <div>
-                <span class="task-list-text">bbbbb：aaaaa</span>
+                <span class="task-list-text">{{ task.task_name }}</span>
               </div>
               <div class="task-detail">
                 <div class="hour">
-                  作業時間：00:00:00
+                  作業時間：{{ task.work_time }}
                 </div>
                 <div>
                   <span class="btn-start" @click="start()">start</span>
-                </div>
-              </div>
-            </li>
-            <li class="category-task-list">
-              <div>
-                <span class="task-list-text">bbbbb：aaaaa</span>
-              </div>
-              <div class="task-detail">
-                <div class="hour">
-                  作業時間：00:00:00
-                </div>
-                <div>
-                  <span class="btn-start">start</span>
                 </div>
               </div>
             </li>
@@ -82,22 +54,7 @@ export default {
   data: function() {
     return {
       projectName: '',
-      openCloseList: [
-        { 
-          id: 0,
-          isHidden: true,
-          isDisplay: false,
-          isClose: true,
-          isOpen: false,
-        },
-        { 
-          id: 1,
-          isHidden: true,
-          isDisplay: false,
-          isClose: true,
-          isOpen: false,
-        }
-      ]
+      openCloseList: []
     }
   },
   created: function () {
@@ -106,7 +63,19 @@ export default {
         projectId: result
       })
       .then(response => {
-        this.projectName = response.data[0].project_name
+        this.projectName = response.data[0].projects.project_name
+        for (let i = 0 ; i < response.data.length ; i++){
+          this.openCloseList.push({
+            id: i,
+            categoryId: response.data[0]._id,
+            category_name: response.data[0].category_name,
+            isHidden: true,
+            isDisplay: false,
+            isClose: true,
+            isOpen: false,
+            taskList: []
+          })
+        }
       })
   },
   methods: {
@@ -116,6 +85,13 @@ export default {
         this.openCloseList[id].isDisplay = true;
         this.openCloseList[id].isClose = false;
         this.openCloseList[id].isOpen = true;
+        axios.post( Const.API_PATH + '/task/fetch', {
+            categoryId: this.openCloseList[id].categoryId
+          })
+          .then(response => {
+            console.log(response.status)
+            this.openCloseList[id].taskList = response.data;
+          })        
       } else {
         this.openCloseList[id].isHidden = true;
         this.openCloseList[id].isDisplay = false;
