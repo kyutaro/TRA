@@ -30,13 +30,12 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style scoped>
 h2 {
   color: #696969;
 }
 
-.modal {
-  &.modal-overlay {
+.modal-overlay {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,52 +46,51 @@ h2 {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-  }
-
-  &-window {
-    background: #fff;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 50vw;
-  }
-
-  &-text {
-    color: #696969;
-    text-align: left;
-  }
-
-  &-content {
-    padding: 10px 20px 10px 30px;
-  }
-
-  &-footer {
-    background: #ccc;
-    padding: 10px;
-    text-align: right;
-  }
 }
 
-// オーバーレイのトランジション
+.modal-window {
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 50vw;
+}
+
+.modal-text {
+  color: #696969;
+  text-align: left;
+}
+
+.modal-content {
+  padding: 10px 20px 10px 30px;
+}
+
+.modal-footer {
+  background: #ccc;
+  padding: 10px;
+  text-align: right;
+}
+
+/* オーバーレイのトランジション */
 .modal-enter-active, .modal-leave-active {
-  transition: opacity 0.4s;
-
-  // オーバーレイに包含されているモーダルウィンドウのトランジション
-  .modal-window {
-    transition: opacity 0.4s, transform 0.4s;
-  }
+  transition: opacity 0.4s;  
 }
 
-// ディレイを付けるとモーダルウィンドウが消えた後にオーバーレイが消える
+/* オーバーレイに包含されているモーダルウィンドウのトランジション */
+.modal-window {
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+/* ディレイを付けるとモーダルウィンドウが消えた後にオーバーレイが消える */
 .modal-leave-active {
   transition: opacity 0.6s ease 0.4s;
 }
 
 .modal-enter, .modal-leave-to {
   opacity: 0;
+}
 
-  .modal-window {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
+.modal-window {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>

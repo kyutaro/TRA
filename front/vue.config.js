@@ -9,14 +9,5 @@ module.exports = {
         pathRewrite: { "^/api/": "/api/" },
       },
     },
-  },
-  css: {
-    loaderOptions: {
-      sass: {
-        prependData: `
-            @import "@/scss/_variables.scss";
-          `,
-      },
-    },
-  },
+  }
 };
