@@ -1,9 +1,13 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const TasksSchema = new mongoose.Schema({
-  category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Categories' },
+  categories: {
+    type: Schema.Types.ObjectId,
+    ref: 'Categories' 
+  },
   task_name: String,
-  worktime: String,
+  work_time: String,
   del_flg: Number
 });
 

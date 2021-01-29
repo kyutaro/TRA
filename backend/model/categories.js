@@ -6,7 +6,10 @@ const CategoriesSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Projects' 
   },
-  category_id: Number,
+  tasks: [{ /* 紐付けで親になる方は配列[]の形にする */
+    type: Schema.Types.ObjectId,
+    ref: 'Tasks' 
+  }],
   category_name: String,
   del_flg: Number
 });

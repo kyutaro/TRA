@@ -9,9 +9,30 @@ router.get('/v1', function(req, res, next) {
   projectController.getProjectDList(res);
 });
 
+router.post('/v1/project/add', function(req, res, next) {
+  systemLogger.debug("projectAddの中");
+  projectController.addProject(req, res);
+});
+
 router.post('/v1/project/init', function(req, res, next) {
   systemLogger.debug("projectInitの中");
   projectController.getProjectData(req, res);
+});
+
+router.post('/v1/task/fetch', function(req, res, next) {
+  systemLogger.debug("taskGetの中");
+  console.log("taskGetの中");
+  projectController.getTaskData(req, res);
+});
+
+router.post('/v1/category/add', function(req, res, next) {
+  systemLogger.debug("categoryAddの中");
+  res.send('/category/addのAPIの応答に成功しました！');
+});
+
+router.post('/v1/task/add', function(req, res, next) {
+  systemLogger.debug("taskAddの中");
+  res.send('/task/addのAPIの応答に成功しました！');
 });
 
 /* フロントでは使わない。開発用のAPI */
@@ -27,21 +48,12 @@ if(Const.devFlg) {
     systemLogger.debug("categorySaveの中");
     projectController.saveCategory(res);
   });
+
+  router.get('/v1/task/save', function(req, res, next) {
+    console.log("taskSaveの中");
+    systemLogger.debug("taskSaveの中");
+    projectController.saveTask(res);
+  });
 }
-
-router.post('/v1/project/add', function(req, res, next) {
-  systemLogger.debug("projectAddの中");
-  projectController.addProject(req, res);
-});
-
-router.post('/v1/category/add', function(req, res, next) {
-  systemLogger.debug("categoryAddの中");
-  res.send('/category/addのAPIの応答に成功しました！');
-});
-
-router.post('/v1/task/add', function(req, res, next) {
-  systemLogger.debug("taskAddの中");
-  res.send('/task/addのAPIの応答に成功しました！');
-});
 
 module.exports = router;
