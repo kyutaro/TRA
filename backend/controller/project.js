@@ -20,7 +20,11 @@ module.exports = {
   addProject: function (req, res) {
     mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    const projecstSave = new Projects({ project_name: req.body.addProjectName, del_flg: 0 });
+    const projecstSave = new Projects({
+      _id: new mongoose.Types.ObjectId(),
+        project_name: req.body.addProjectName,
+        del_flg: 0 
+    });
     projecstSave.save((err, ret) => {
       if (err) console.error(err)
       console.log(ret)
@@ -50,16 +54,47 @@ module.exports = {
     .populate('categories')
     .exec(function (err, ret) {
       if (err) return handleError(err);
+      mongoose.disconnect();
       return res.send(ret);
     });
   },
+
+  addCategory: function (req, res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    const categories = new Categories({
+      projects: req.body.projectId,
+      category_name: req.body.categoryName,
+      del_flg: 0
+    });
+    
+    categories.save(function (err, ret) {
+      if (err) console.log(err);
+      return res.send(ret);
+    });
+  }, 
+
+  addTask: function (req, res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    const tasks = new Tasks({
+      categories: req.body.categoryId, /* ここにcategoriesコレクションの_idを入れる */
+      task_name: req.body.taskName,
+      work_time: '00:00:00',
+      del_flg: 0
+    });
+    
+    tasks.save(function (err, ret) {
+      if (err) console.log(err);
+      return res.send(ret);
+    });
+  }, 
 
   saveProjectAndCategory: function (res) {
     mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
     const projects = new Projects({
       _id: new mongoose.Types.ObjectId(),
-      project_id: 2,
       project_name: 'Alan Smith',
       del_flg: 0,
     });
@@ -86,7 +121,6 @@ module.exports = {
 
     const categories = new Categories({
       projects: '600b94d3ab53021f74fdbaee', /* ここにprojectコレクションの_idを入れる */
-      category_id: 3,
       category_name: 'Alan Alan Alan',
       del_flg: 0
     });

@@ -3,7 +3,6 @@ const Schema = mongoose.Schema
 
 const ProjectsSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  project_id: Number,
   project_name: String,
   del_flg: Number,
   categories: [{ 

@@ -27,12 +27,12 @@ router.post('/v1/task/fetch', function(req, res, next) {
 
 router.post('/v1/category/add', function(req, res, next) {
   systemLogger.debug("categoryAddの中");
-  res.send('/category/addのAPIの応答に成功しました！');
+  projectController.addCategory(req, res);
 });
 
 router.post('/v1/task/add', function(req, res, next) {
   systemLogger.debug("taskAddの中");
-  res.send('/task/addのAPIの応答に成功しました！');
+  projectController.addTask(req, res);
 });
 
 /* フロントでは使わない。開発用のAPI */
