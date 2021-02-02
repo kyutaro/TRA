@@ -18,7 +18,7 @@
         <button class="add-category-button" @click="addCategory()">追加</button>
       </div>
     </div>
-    <ul class="category">
+    <ul class="category" v-if="openCloseList != ''">
       <li v-for="item in openCloseList" :key="item.id" class="category-list">
         <div v-bind:class="{category_list_close: item.isClose, category_list_open: item.isOpen}" @click="openClose(item.id)">
           <span class="category-list-text">{{ item.category_name }}</span>
@@ -29,10 +29,10 @@
           </div>
           <div class="add-task-action" v-bind:class="{display_add_task: displayAddTaskFlg, nondisplay_add_task: hiddenAddTaskFlg}">
             <div>
-              <input id="add-task-name" type="text" class="add-task-name">
+              <input :id="'add-task-name-' + item.categoryId" type="text" class="add-task-name">
             </div>
             <div>
-              <button class="add-task-button" @click="addTask()">追加</button>
+              <button class="add-task-button" @click="addTask(item.categoryId, item.id)">追加</button>
             </div>
           </div>
           <!-- <add-task></add-task> -->
@@ -90,8 +90,8 @@ export default {
         for (let i = 0 ; i < response.data.length ; i++){
           this.openCloseList.push({
             id: i,
-            categoryId: response.data[0]._id,
-            category_name: response.data[0].category_name,
+            categoryId: response.data[i]._id,
+            category_name: response.data[i].category_name,
             isHidden: true,
             isDisplay: false,
             isClose: true,
@@ -112,10 +112,23 @@ export default {
       }
     },
     addCategory: function() {
-      console.log("addCategoryの中です。")
-      axios.post( Const.API_PATH + '/category/add')
+      let addCategoryName = document.getElementById('add-category-name').value;
+      axios.post( Const.API_PATH + '/category/add', {
+          projectId: this.$route.path.slice(9),
+          categoryName: addCategoryName
+        })
         .then(response => {
           console.log(response.status)
+          this.openCloseList.push({
+            id: this.openCloseList.length,
+            categoryId: response.data._id,
+            category_name: response.data.category_name,
+            isHidden: true,
+            isDisplay: false,
+            isClose: true,
+            isOpen: false,
+            taskList: []
+          })
         })
     },
     openClose: function(id) {
@@ -124,13 +137,16 @@ export default {
         this.openCloseList[id].isDisplay = true;
         this.openCloseList[id].isClose = false;
         this.openCloseList[id].isOpen = true;
-        axios.post( Const.API_PATH + '/task/fetch', {
-            categoryId: this.openCloseList[id].categoryId
-          })
-          .then(response => {
-            console.log(response.status)
-            this.openCloseList[id].taskList = response.data;
-          })        
+        /* 最初に一度だけ取得用のAPIを呼ぶ */
+        if(!this.openCloseList[id].taskList.length) {
+          axios.post( Const.API_PATH + '/task/fetch', {
+              categoryId: this.openCloseList[id].categoryId
+            })
+            .then(response => {
+              console.log(response.status)
+              this.openCloseList[id].taskList = response.data;
+            })        
+        }
       } else {
         this.openCloseList[id].isHidden = true;
         this.openCloseList[id].isDisplay = false;
@@ -146,6 +162,22 @@ export default {
         this.displayAddTaskFlg = true,
         this.hiddenAddTaskFlg = false
       }
+    },
+    addTask: function(categoryId, id) {
+      let addTaskName = document.getElementById('add-task-name-' + categoryId).value;
+      axios.post( Const.API_PATH + '/task/add', {
+          categoryId: categoryId,
+          taskName: addTaskName
+        })
+        .then(response => {
+          console.log(response.status)
+          console.log(response.data)
+          this.openCloseList[id].taskList.push({
+            id: response.data._id,
+            task_name: response.data.task_name,
+            work_time: response.data.work_time
+          })
+        })
     },
     start: function() {
       console.log("startの処理を行う")
