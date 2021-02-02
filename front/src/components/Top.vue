@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="top">
     <Modal @close="closeModal" v-if="modal"></Modal>
     <h2>Project List</h2>
     <div class="display-add-project" @click="displayAddProject()">
@@ -8,8 +8,12 @@
       <span class="ml10">プロジェクトを追加する</span>
     </div>
     <div class="add-project-action" v-bind:class="{display_add_project: displayAddProjectFlg, nondisplay_add_project: hiddenAddProjectFlg}">
-      <input id="add-project-name" type="text" class="add-project-name">
-      <button class="add-project-button" @click="addProject()">追加</button>
+      <div>
+        <input id="add-project-name" type="text" class="add-project-name">
+      </div>
+      <div>
+        <button class="add-project-button" @click="addProject()">追加</button>
+      </div>
     </div>
     <ul id="project" class="project" v-if="projectList != ''">
       <li v-for="project in projectList" :key="project.projectId">
@@ -81,7 +85,7 @@ export default {
       .then(response => {
         console.log(response.status)
         this.projectList.push({
-          projectId: response.data.project_id,
+          projectId: response.data._id,
           projectName: response.data.project_name
         })
       })
@@ -100,26 +104,30 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.top {
+  padding: 0;
+  margin: 0 auto;
+  width: 50vw;
+}
+
 .display-add-project {
   cursor: pointer;
   margin: 10px auto;
-  width: 30%;
 }
 
 .add-project-action {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
-  width: 30%;
+  width: 100%;
 }
 
 .nondisplay_add_project {
-    height: 0;
-    padding: 0;
-    opacity: 0;
-    transition: height 0.4s;
-    visibility: hidden;
+  height: 0;
+  padding: 0;
+  opacity: 0;
+  transition: height 0.4s;
+  visibility: hidden;
 }
 
 .display_add_project {
@@ -130,27 +138,34 @@ export default {
 }
 
 .add-project-name {
-    border: 2px solid #ddd;
-    border-radius: 3px;
-    box-sizing: border-box;
-    font-size: 16px;
-    height: 30px;
-    padding: 5px 15px;
-    margin: 5px 0 0 0;
+  border: 2px solid #ddd;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-size: 16px;
+  height: 30px;
+  padding: 5px 15px;
+  margin: 5px 0 0 0;
 }
 
 .add-project-button {
-    background-color: #eb6100;
-    border-radius: 0.5rem;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 1.4rem;
-    font-weight: 700;
-    height: 40px;
-    letter-spacing: 0.15em;
-    padding: 0 1rem;
-    width: 100px;
+  background-color: #eb6100;
+  border-radius: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  height: 40px;
+  letter-spacing: 0.15em;
+  margin: 0 0 0 10px;
+  padding: 0 1rem;
+  width: 100px;
+}
+
+@media screen and (max-width: 768px){
+  .add-project-button {
+    padding: 0 10px 0 10px;
+  }
 }
 
 .project {

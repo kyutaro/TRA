@@ -7,8 +7,16 @@
       </router-link>
     </div>
     <div class="allHour">総作業時間 00:00:00</div>
-    <div class="addCategory" @click="addCategory()">
+    <div class="addCategory" @click="displayAddCategory()">
       <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">カテゴリーを追加する</span>
+    </div>
+    <div class="add-category-action" v-bind:class="{display_add_category: displayAddCategoryFlg, nondisplay_add_category: hiddenAddCategoryFlg}">
+      <div>
+        <input id="add-category-name" type="text" class="add-category-name">
+      </div>
+      <div>
+        <button class="add-category-button" @click="addCategory()">追加</button>
+      </div>
     </div>
     <ul class="category">
       <li v-for="item in openCloseList" :key="item.id" class="category-list">
@@ -16,7 +24,18 @@
           <span class="category-list-text">{{ item.category_name }}</span>
         </div>
         <div v-bind:class="{category_task_hidden: item.isHidden, category_task_display: item.isDisplay}">
-          <add-task></add-task>
+          <div class="add-task" @click="displayAddTask()">
+            <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">タスクを追加する</span>
+          </div>
+          <div class="add-task-action" v-bind:class="{display_add_task: displayAddTaskFlg, nondisplay_add_task: hiddenAddTaskFlg}">
+            <div>
+              <input id="add-task-name" type="text" class="add-task-name">
+            </div>
+            <div>
+              <button class="add-task-button" @click="addTask()">追加</button>
+            </div>
+          </div>
+          <!-- <add-task></add-task> -->
           <ul class="category-task">
             <li v-for="task in item.taskList" :key="task._id" class="category-task-list">
               <div>
@@ -54,6 +73,10 @@ export default {
   data: function() {
     return {
       projectName: '',
+      displayAddCategoryFlg: false,
+      hiddenAddCategoryFlg: true,
+      displayAddTaskFlg: false,
+      hiddenAddTaskFlg: true,
       openCloseList: []
     }
   },
@@ -79,6 +102,22 @@ export default {
       })
   },
   methods: {
+    displayAddCategory: function() {
+      if(this.displayAddCategoryFlg) {
+        this.displayAddCategoryFlg = false,
+        this.hiddenAddCategoryFlg = true
+      } else {
+        this.displayAddCategoryFlg = true,
+        this.hiddenAddCategoryFlg = false
+      }
+    },
+    addCategory: function() {
+      console.log("addCategoryの中です。")
+      axios.post( Const.API_PATH + '/category/add')
+        .then(response => {
+          console.log(response.status)
+        })
+    },
     openClose: function(id) {
       if(this.openCloseList[id].isHidden) {
         this.openCloseList[id].isHidden = false;
@@ -99,15 +138,17 @@ export default {
         this.openCloseList[id].isOpen = false;
       }
     },
+    displayAddTask: function() {
+      if(this.displayAddTaskFlg) {
+        this.displayAddTaskFlg = false,
+        this.hiddenAddTaskFlg = true
+      } else {
+        this.displayAddTaskFlg = true,
+        this.hiddenAddTaskFlg = false
+      }
+    },
     start: function() {
       console.log("startの処理を行う")
-    },
-    addCategory: function() {
-      console.log("addCategoryの中です。")
-      axios.post( Const.API_PATH + '/category/add')
-        .then(response => {
-          console.log(response.status)
-        })
     }
   }
 };
@@ -161,7 +202,75 @@ export default {
 .addCategory {
   cursor: pointer;
   margin: 10px auto;
-  width: 40%;
+}
+
+.add-task {
+  cursor: pointer;
+  margin: 20px 0px 0 45px;
+}
+
+.add-category-action {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.add-task-action {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 0 0 45px;
+  width: 100%;
+}
+
+.nondisplay_add_category,
+.nondisplay_add_task {
+  height: 0;
+  padding: 0;
+  opacity: 0;
+  transition: height 0.4s;
+  visibility: hidden;
+}
+
+.display_add_category,
+.display_add_task {
+  height: 40px;
+  opacity: 1;
+  visibility: visible;
+  transition: .2s;
+}
+
+.add-category-name,
+.add-task-name {
+  border: 2px solid #ddd;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-size: 16px;
+  height: 30px;
+  padding: 5px 15px;
+  margin: 5px 0 0 0;
+}
+
+.add-category-button,
+.add-task-button {
+  background-color: #eb6100;
+  border-radius: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  height: 40px;
+  letter-spacing: 0.15em;
+  margin: 0 0 0 10px;
+  padding: 0 1rem;
+  width: 100px;
+}
+
+@media screen and (max-width: 768px){
+  .add-task-button {
+    padding: 0 10px 0 10px;
+  }
 }
 
 .category {
