@@ -27,7 +27,6 @@ export default {
 <style scoped>
 .addTask {
   cursor: pointer;
-  margin: 10px auto;
-  width: 40%;
+  margin: 20px 0px 0 45px;
 }
 </style>

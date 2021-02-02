@@ -10,10 +10,10 @@
     <div class="addCategory" @click="addCategory()">
       <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">カテゴリーを追加する</span>
     </div>
-    <ul class="task">
+    <ul class="category">
       <li v-for="item in openCloseList" :key="item.id" class="category-list">
         <div v-bind:class="{category_list_close: item.isClose, category_list_open: item.isOpen}" @click="openClose(item.id)">
-          <span class="task-list-text">{{ item.category_name }}</span>
+          <span class="category-list-text">{{ item.category_name }}</span>
         </div>
         <div v-bind:class="{category_task_hidden: item.isHidden, category_task_display: item.isDisplay}">
           <add-task></add-task>
@@ -23,11 +23,11 @@
                 <span class="task-list-text">{{ task.task_name }}</span>
               </div>
               <div class="task-detail">
-                <div class="hour">
+                <div class="task-hour">
                   作業時間：{{ task.work_time }}
                 </div>
-                <div>
-                  <span class="btn-start" @click="start()">start</span>
+                <div class="task-btn">
+                  <span class="task-btn-start" @click="start()">start</span>
                 </div>
               </div>
             </li>
@@ -164,50 +164,17 @@ export default {
   width: 40%;
 }
 
-.task {
+.category {
   list-style-type: none;
   margin: 0 0 0 10px;
   padding: 0;
   text-align: left;
 }
 
-.task-list {
-  background-color: #fafafa;
-  border-radius: 10px;
-  box-shadow: 5px 7px 25px rgba(0, 0, 0, 0.5);
-  color: #696969;
-  margin: 25px auto;
-  opacity: 1;
-  padding: 10px 0px 15px 15px;
-  width: 87%;
-}
-
-.task-list::before {
-  background-image: url("../assets/task_icon.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  content: "";
-  display: inline-block;
-  height: 30px;
-  position: absolute;
-  width: 30px;
-}
-
-.task-list-text {
-  display: inline-block;
-  padding: 9px 0 0 45px;
-}
-
-.task-detail {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
-  margin: 10px 0px 0px 45px;
-}
-
 .category-list {
   cursor: pointer;
-  margin: 20px 10px;
+  margin: 20px auto;
+  width: 100%;
 }
 
 .category_list_close::before {
@@ -246,6 +213,11 @@ export default {
     transition: 1s;
 }
 
+.category-list-text {
+  display: inline-block;
+  padding: 9px 0 0 45px;
+}
+
 .category-task {
   list-style-type: none;
   padding: 0;
@@ -274,11 +246,39 @@ export default {
   width: 30px;
 }
 
-.hour {
+.task-detail {
+	display: flex;
+	justify-content: space-between;
+  margin: 10px 0px 0px 45px;
+}
+
+@media screen and (max-width: 768px){
+  .task-detail{
+    display: block;
+  }
+}
+
+.task-list-text {
+  display: inline-block;
+  padding: 9px 0 0 30px;
+}
+
+.task-hour {
+  margin: 0 10px 0 0;
   padding: 10px 0 0 0;
 }
 
-.btn-start {
+.task-btn {
+  margin: 0 15px 0 0;
+}
+
+@media screen and (max-width: 768px){
+  .task-btn {
+    margin: 10px 0 0 0;
+  }
+}
+
+.task-btn-start {
   background-color: #eb6100;
   border-radius: 0.5rem;
   color: #fff;
@@ -290,7 +290,7 @@ export default {
   padding: 0.5rem 1rem;
 }
 
-.btn-start:hover {
+.task-btn-start:hover {
   background: #f56500;
 }
 </style>
