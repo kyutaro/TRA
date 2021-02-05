@@ -22,6 +22,9 @@
         </router-link>
       </li>
     </ul>
+    <div class="project-none" v-else>
+      まだプロジェクトが作成されていません。
+    </div>
     <div class="error" v-if="apiErrFlg">
       <p>
 
@@ -202,6 +205,11 @@ export default {
 
 .project li a {
   color: #d8d8d8;
+}
+
+.project-none {
+  margin-top: 10px;
+  text-align: center;
 }
 
 .error {

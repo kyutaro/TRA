@@ -54,19 +54,18 @@
         </div>
       </li>
     </ul>
+    <div v-else>
+      まだカテゴリーが作成されていません。
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios"
 import Const from './../const'
-import AddTask from "./AddTask.vue"
 
 export default {
   name: "Project",
-  components: {
-    AddTask
-  },
   props: {
     msg: String,
   },
