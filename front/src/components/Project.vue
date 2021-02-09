@@ -37,16 +37,17 @@
           </div>
           <!-- <add-task></add-task> -->
           <ul class="category-task">
-            <li v-for="task in item.taskList" :key="task._id" class="category-task-list">
+            <li v-for="(task, index) in item.taskList" :key="task._id" class="category-task-list">
               <div>
                 <span class="task-list-text">{{ task.task_name }}</span>
               </div>
               <div class="task-detail">
-                <div class="task-hour">
+                <div :id="task._id" class="task-hour">
                   作業時間：{{ task.work_time }}
                 </div>
                 <div class="task-btn">
-                  <span class="task-btn-start" @click="start()">start</span>
+                  <span class="task-btn-start" @click="start(item.id, index)">start</span>
+                  <span class="task-btn-stop" @click="stop(item.id, index)">stop</span>
                 </div>
               </div>
             </li>
@@ -178,8 +179,51 @@ export default {
           })
         })
     },
-    start: function() {
+    /**
+     * 作業時間のカウント処理
+     */
+    start: function(categoryIndex, taskIndex) {
       console.log("startの処理を行う")
+
+      this.openCloseList[categoryIndex].taskList[taskIndex].start_id = setInterval(this.cntWorkTime, 1000, categoryIndex, taskIndex)
+      console.log("startId：" + this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
+    },
+    cntWorkTime: function(categoryIndex, taskIndex) {
+      let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
+      workTimeToSeconds++
+      let workTime = this.secondsToworkTime(workTimeToSeconds)
+      console.log("workTime：")
+      console.log(workTime)
+      this.changeWorkTime(workTime, categoryIndex, taskIndex)
+    },
+    workTimeToSeconds: function(categoryIndex, taskIndex) {
+      let workTime = this.openCloseList[categoryIndex].taskList[taskIndex].work_time
+
+      let hour = parseInt(workTime.slice(0, 2)) * 60 * 60
+      let minutes = parseInt(workTime.slice(3, 5)) * 60
+      let seconds = parseInt(workTime.slice(6, 8))
+
+      return hour + minutes + seconds
+    },
+    secondsToworkTime: function(workTimeToSeconds) {
+      let hour = Math.floor(workTimeToSeconds / 3600)
+      let minutes = Math.floor((workTimeToSeconds % 3600) / 60)
+      let seconds = ((workTimeToSeconds % 3600) % 60)
+
+      console.log("hour：")
+      console.log(hour)
+      console.log("minutes：")
+      console.log(minutes)
+      console.log("seconds：")
+      console.log(seconds)
+      return String(hour) + ":" + String(minutes) + ":" + String(seconds)
+    },
+    changeWorkTime: function(workTime, categoryIndex, taskIndex) {
+      this.openCloseList[categoryIndex].taskList[taskIndex].work_time = workTime
+    },
+    stop: function(categoryIndex, taskIndex) {
+      console.log("うおおお")
+      clearInterval(this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
     }
   }
 };
@@ -431,6 +475,22 @@ export default {
 }
 
 .task-btn-start:hover {
-  background: #f56500;
+  background: #ff8027;
+}
+
+.task-btn-stop {
+  background-color: #DA5049;
+  border-radius: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.5rem 1rem;
+}
+
+.task-btn-stop:hover {
+  background: #e68a85;
 }
 </style>
