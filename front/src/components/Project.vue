@@ -6,7 +6,7 @@
         <font-awesome-icon :icon="['fas', 'angle-left']" />
       </router-link>
     </div>
-    <div class="allHour">総作業時間 00:00:00</div>
+    <div class="allHour displayNone">総作業時間 00:00:00</div>
     <div class="addCategory" @click="displayAddCategory()">
       <font-awesome-icon :icon="['fas', 'plus']" /><span class="ml10">カテゴリーを追加する</span>
     </div>
@@ -46,8 +46,8 @@
                   作業時間：{{ task.work_time }}
                 </div>
                 <div class="task-btn">
-                  <span class="task-btn-start" @click="start(item.id, index)">start</span>
-                  <span class="task-btn-stop" @click="stop(item.id, index)">stop</span>
+                  <span :id="'task-btn-start-' + task._id" class="task-btn-start" @click="start(item.id, index, task._id)">start</span>
+                  <span :id="'task-btn-stop-' + task._id" class="task-btn-stop displayNone" @click="stop(item.id, index, task._id)">stop</span>
                 </div>
               </div>
             </li>
@@ -179,14 +179,20 @@ export default {
           })
         })
     },
-    /**
-     * 作業時間のカウント処理
-     */
-    start: function(categoryIndex, taskIndex) {
+    // 作業時間のカウント処理
+    start: function(categoryIndex, taskIndex, taskId) {
       console.log("startの処理を行う")
 
+      this.startBtnNonDisplay(taskId)
       this.openCloseList[categoryIndex].taskList[taskIndex].start_id = setInterval(this.cntWorkTime, 1000, categoryIndex, taskIndex)
       console.log("startId：" + this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
+    },
+    // startボタン非表示・stop表示の切り替え
+    startBtnNonDisplay: function(taskId) {
+      let startBtnId = document.getElementById("task-btn-start-" + taskId)
+      startBtnId.classList.add("displayNone")
+      let stopBtnId = document.getElementById("task-btn-stop-" + taskId)
+      stopBtnId.classList.remove("displayNone")
     },
     cntWorkTime: function(categoryIndex, taskIndex) {
       let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
@@ -210,20 +216,38 @@ export default {
       let minutes = Math.floor((workTimeToSeconds % 3600) / 60)
       let seconds = ((workTimeToSeconds % 3600) % 60)
 
-      console.log("hour：")
-      console.log(hour)
-      console.log("minutes：")
-      console.log(minutes)
-      console.log("seconds：")
-      console.log(seconds)
+      // 画面上で時間表記が0:0:0と一桁で表記されるのを防ぐ
+      if(hour < 10) {
+        hour = "0" + String(hour)
+      } else {
+        hour = String(hour)
+      }
+      if(minutes < 10) {
+        minutes = "0" + String(minutes)
+      } else {
+        minutes = String(minutes)
+      }
+      if(seconds < 10) {
+        seconds = "0" + String(seconds)
+      } else {
+        seconds = String(seconds)
+      }
+
       return String(hour) + ":" + String(minutes) + ":" + String(seconds)
     },
     changeWorkTime: function(workTime, categoryIndex, taskIndex) {
       this.openCloseList[categoryIndex].taskList[taskIndex].work_time = workTime
     },
-    stop: function(categoryIndex, taskIndex) {
-      console.log("うおおお")
+    stop: function(categoryIndex, taskIndex, taskId) {
+      this.stopBtnNonDisplay(taskId)
       clearInterval(this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
+    },
+    // startボタン表示・stop非表示の切り替え
+    stopBtnNonDisplay: function(taskId) {
+      let startBtnId = document.getElementById("task-btn-start-" + taskId)
+      startBtnId.classList.remove("displayNone")
+      let stopBtnId = document.getElementById("task-btn-stop-" + taskId)
+      stopBtnId.classList.add("displayNone")
     }
   }
 };
