@@ -1,6 +1,6 @@
 <template>
   <div class="top">
-    <Modal @close="closeModal" v-if="modal"></Modal>
+    <Modal v-if="modal"></Modal>
     <h2>Project List</h2>
     <div class="display-add-project" @click="displayAddProject()">
       <font-awesome-icon :icon="['fas', 'plus']" v-bind:class="{displayNone: displayAddProjectFlg}" />

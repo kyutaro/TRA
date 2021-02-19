@@ -51,7 +51,10 @@ h2 {
 .modal-window {
   background: #fff;
   border-radius: 4px;
+  /* opacity: 0; */
   overflow: hidden;
+  transform: translateY(-20px);
+  transition: opacity 0.4s, transform 0.4s;
   width: 50vw;
 }
 
@@ -75,11 +78,6 @@ h2 {
   transition: opacity 0.4s;  
 }
 
-/* オーバーレイに包含されているモーダルウィンドウのトランジション */
-.modal-window {
-  transition: opacity 0.4s, transform 0.4s;
-}
-
 /* ディレイを付けるとモーダルウィンドウが消えた後にオーバーレイが消える */
 .modal-leave-active {
   transition: opacity 0.6s ease 0.4s;
@@ -89,8 +87,4 @@ h2 {
   opacity: 0;
 }
 
-.modal-window {
-  opacity: 0;
-  transform: translateY(-20px);
-}
 </style>
