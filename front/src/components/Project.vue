@@ -35,7 +35,6 @@
               <button class="add-task-button" @click="addTask(item.categoryId, item.id)">追加</button>
             </div>
           </div>
-          <!-- <add-task></add-task> -->
           <ul class="category-task">
             <li v-for="(task, index) in item.taskList" :key="task._id" class="category-task-list">
               <div>
@@ -81,7 +80,7 @@ export default {
     }
   },
   created: function () {
-    let result = this.$route.path.slice(9)
+    let result = this.$route.path.slice(9) /* URLからプロジェクトIDを選択する */
     axios.post( Const.API_PATH + '/project/init', {
         projectId: result
       })
@@ -96,7 +95,7 @@ export default {
             isDisplay: false,
             isClose: true,
             isOpen: false,
-            taskList: []
+            taskList: [] /* 中身はカテゴリーを開いた時に取得する */
           })
         }
       })
@@ -137,7 +136,7 @@ export default {
         this.openCloseList[id].isDisplay = true;
         this.openCloseList[id].isClose = false;
         this.openCloseList[id].isOpen = true;
-        /* 最初に一度だけ取得用のAPIを呼ぶ */
+        /* 最初に一度だけ取得用のAPIを呼ぶ→無駄なAPI呼び出しを防ぐため */
         if(!this.openCloseList[id].taskList.length) {
           axios.post( Const.API_PATH + '/task/fetch', {
               categoryId: this.openCloseList[id].categoryId
@@ -181,12 +180,9 @@ export default {
     },
     // 作業時間のカウント処理
     start: function(categoryIndex, taskIndex, taskId) {
-      console.log("startの処理を行う")
-
       this.startBtnNonDisplay(taskId)
-      this.backendStartCnt(categoryIndex, taskIndex, taskId)
       this.openCloseList[categoryIndex].taskList[taskIndex].start_id = setInterval(this.cntWorkTime, 1000, categoryIndex, taskIndex)
-      console.log("startId：" + this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
+      this.backendStartCnt(categoryIndex, taskIndex, taskId)
     },
     // startボタン非表示・stop表示の切り替え
     startBtnNonDisplay: function(taskId) {
@@ -195,25 +191,13 @@ export default {
       let stopBtnId = document.getElementById("task-btn-stop-" + taskId)
       stopBtnId.classList.remove("displayNone")
     },
-    backendStartCnt: function(categoryIndex, taskIndex, taskId) {
-      let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
-      axios.post( Const.API_PATH + '/task/start', {
-          taskId: taskId,
-          workTimeToSeconds: workTimeToSeconds
-        })
-        .then(response => {
-          console.log(response.status)
-          console.log(response.data)
-        })
-    },
     cntWorkTime: function(categoryIndex, taskIndex) {
       let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
       workTimeToSeconds++
       let workTime = this.secondsToworkTime(workTimeToSeconds)
-      console.log("workTime：")
-      console.log(workTime)
       this.changeWorkTime(workTime, categoryIndex, taskIndex)
     },
+    // カウントするために、hh:mm:ss形式を秒に変換
     workTimeToSeconds: function(categoryIndex, taskIndex) {
       let workTime = this.openCloseList[categoryIndex].taskList[taskIndex].work_time
 
@@ -223,6 +207,7 @@ export default {
 
       return hour + minutes + seconds
     },
+    // 秒でカウントされた時間を再びhh:mm:ss形式に戻す
     secondsToworkTime: function(workTimeToSeconds) {
       let hour = Math.floor(workTimeToSeconds / 3600)
       let minutes = Math.floor((workTimeToSeconds % 3600) / 60)
@@ -250,6 +235,23 @@ export default {
     changeWorkTime: function(workTime, categoryIndex, taskIndex) {
       this.openCloseList[categoryIndex].taskList[taskIndex].work_time = workTime
     },
+    /**
+     *  作業時間のカウント処理。
+     * （Backend側の処理 → Notice：ブラウザ離脱した際にもカウントを動かし続けるため）
+     * ToDo：ブラウザ再アクセス時にサーバー側からカウント時間を持ってくる処理
+    **/ 
+    backendStartCnt: function(categoryIndex, taskIndex, taskId) {
+      let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
+      axios.post( Const.API_PATH + '/task/start', {
+          taskId: taskId,
+          workTimeToSeconds: workTimeToSeconds
+        })
+        .then(response => {
+          console.log(response.status)
+          console.log(response.data)
+        })
+    },
+    // カウントのストップ処理
     stop: function(categoryIndex, taskIndex, taskId) {
       this.stopBtnNonDisplay(taskId)
       this.backendStopCnt(taskId)

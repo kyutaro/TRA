@@ -25,11 +25,6 @@
     <div class="project-none" v-else>
       まだプロジェクトが作成されていません。
     </div>
-    <div class="error" v-if="apiErrFlg">
-      <p>
-
-      </p>
-    </div>
   </div>
 </template>
 
@@ -43,11 +38,9 @@ export default {
   data: function() {
     return {
       projectList: [], /* DBから取得 */
-      apiErrFlg: false,
       displayAddProjectFlg: false,
       hiddenAddProjectFlg: true,
-      modal: false,
-      message: ''
+      modal: false
     }
   },
   components: {
@@ -65,7 +58,6 @@ export default {
         })
       })
       .catch(err => {
-        this.apiErrFlg = true
         this.openModal()
         throw err
       })
@@ -93,7 +85,6 @@ export default {
         })
       })
       .catch(err => {
-        this.apiErrFlg = true
         this.openModal()
         throw err
       })

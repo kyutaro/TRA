@@ -58,19 +58,13 @@ h2 {
   width: 50vw;
 }
 
-.modal-text {
-  color: #696969;
-  text-align: left;
-}
-
 .modal-content {
   padding: 10px 20px 10px 30px;
 }
 
-.modal-footer {
-  background: #ccc;
-  padding: 10px;
-  text-align: right;
+.modal-text {
+  color: #696969;
+  text-align: left;
 }
 
 /* オーバーレイのトランジション */
