@@ -184,6 +184,7 @@ export default {
       console.log("startの処理を行う")
 
       this.startBtnNonDisplay(taskId)
+      this.backendStartCnt(categoryIndex, taskIndex, taskId)
       this.openCloseList[categoryIndex].taskList[taskIndex].start_id = setInterval(this.cntWorkTime, 1000, categoryIndex, taskIndex)
       console.log("startId：" + this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
     },
@@ -193,6 +194,17 @@ export default {
       startBtnId.classList.add("displayNone")
       let stopBtnId = document.getElementById("task-btn-stop-" + taskId)
       stopBtnId.classList.remove("displayNone")
+    },
+    backendStartCnt: function(categoryIndex, taskIndex, taskId) {
+      let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
+      axios.post( Const.API_PATH + '/task/start', {
+          taskId: taskId,
+          workTimeToSeconds: workTimeToSeconds
+        })
+        .then(response => {
+          console.log(response.status)
+          console.log(response.data)
+        })
     },
     cntWorkTime: function(categoryIndex, taskIndex) {
       let workTimeToSeconds = this.workTimeToSeconds(categoryIndex, taskIndex)
@@ -240,6 +252,7 @@ export default {
     },
     stop: function(categoryIndex, taskIndex, taskId) {
       this.stopBtnNonDisplay(taskId)
+      this.backendStopCnt(taskId)
       clearInterval(this.openCloseList[categoryIndex].taskList[taskIndex].start_id)
     },
     // startボタン表示・stop非表示の切り替え
@@ -248,7 +261,16 @@ export default {
       startBtnId.classList.remove("displayNone")
       let stopBtnId = document.getElementById("task-btn-stop-" + taskId)
       stopBtnId.classList.add("displayNone")
-    }
+    },
+    backendStopCnt: function(taskId) {
+      axios.post( Const.API_PATH + '/task/stop', {
+          taskId: taskId
+        })
+        .then(response => {
+          console.log(response.status)
+          console.log(response.data)
+        })
+    },
   }
 };
 </script>
