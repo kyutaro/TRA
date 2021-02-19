@@ -44,7 +44,8 @@ router.post('/v1/task/stop', function(req, res, next) {
   projectController.taskStop(req, res);
 });
 
-/* フロントでは使わない。開発用のAPI */
+///////////////////////////////////////////////////////////
+/* 本番では使わない。開発用のAPI */
 if(Const.devFlg) {
   router.get('/v1/project/save', function(req, res, next) {
     console.log("projectSaveの中");
@@ -64,5 +65,6 @@ if(Const.devFlg) {
     projectController.saveTask(res);
   });
 }
+///////////////////////////////////////////////////////////
 
 module.exports = router;
