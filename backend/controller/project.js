@@ -145,6 +145,8 @@ module.exports = {
     });
   },
 
+///////////////////////////////////////////////////////////
+/* 本番では使わない。開発用のAPI */
   saveProjectAndCategory: function (res) {
     mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -201,4 +203,5 @@ module.exports = {
       return res.send(ret);
     });
   }
+///////////////////////////////////////////////////////////
 };
