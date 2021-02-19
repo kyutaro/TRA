@@ -21,7 +21,6 @@ router.post('/v1/project/init', function(req, res, next) {
 
 router.post('/v1/task/fetch', function(req, res, next) {
   systemLogger.debug("taskGetの中");
-  console.log("taskGetの中");
   projectController.getTaskData(req, res);
 });
 
@@ -33,6 +32,16 @@ router.post('/v1/category/add', function(req, res, next) {
 router.post('/v1/task/add', function(req, res, next) {
   systemLogger.debug("taskAddの中");
   projectController.addTask(req, res);
+});
+
+router.post('/v1/task/start', function(req, res, next) {
+  systemLogger.debug("taskStartの中");
+  projectController.taskStart(req, res);
+});
+
+router.post('/v1/task/stop', function(req, res, next) {
+  systemLogger.debug("taskStopの中");
+  projectController.taskStop(req, res);
 });
 
 /* フロントでは使わない。開発用のAPI */

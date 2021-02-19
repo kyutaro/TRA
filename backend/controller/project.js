@@ -6,6 +6,8 @@ const Categories = require('./../model/categories');
 const Tasks = require('./../model/tasks');
 
 module.exports = {
+  workTimeToSeconds: 0, /* カウント時間 */
+  setIntervalId: 0, /* カウント用関数のID管理のための変数 */
   getProjectDList: function (res) {
     mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
     
@@ -89,6 +91,59 @@ module.exports = {
       return res.send(ret);
     });
   }, 
+
+  taskStart: function (req, res) {
+    console.log("taskStartの中");
+    workTimeToSeconds = req.body.workTimeToSeconds;
+    setIntervalId = setInterval(this.cntWorkTime, 1000);
+    
+    return res.send('tasStart sunccess!')
+  },
+
+  cntWorkTime: function () {
+    workTimeToSeconds++
+  },
+
+  taskStop: function (req, res) {
+    clearInterval(setIntervalId);
+
+    let workTime = this.secondsToworkTime();
+    this.insertWorktime(req.body.taskId, workTime, res);
+  },
+
+  secondsToworkTime: function() {
+    let hour = Math.floor(workTimeToSeconds / 3600)
+    let minutes = Math.floor((workTimeToSeconds % 3600) / 60)
+    let seconds = ((workTimeToSeconds % 3600) % 60)
+
+    // 画面上で時間表記が0:0:0と一桁で表記されるのを防ぐ
+    if(hour < 10) {
+      hour = "0" + String(hour)
+    } else {
+      hour = String(hour)
+    }
+    if(minutes < 10) {
+      minutes = "0" + String(minutes)
+    } else {
+      minutes = String(minutes)
+    }
+    if(seconds < 10) {
+      seconds = "0" + String(seconds)
+    } else {
+      seconds = String(seconds)
+    }
+
+    return String(hour) + ":" + String(minutes) + ":" + String(seconds)
+  },
+
+  insertWorktime: function(taskId, workTime, res) {
+    mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+    Tasks.findByIdAndUpdate({ _id: taskId }, { $set: {work_time: workTime} }, { new : false }, (err, ret) => {
+      if (err) console.log(err);
+      mongoose.disconnect();
+      return res.send("update success!");
+    });
+  },
 
   saveProjectAndCategory: function (res) {
     mongoose.connect(Const.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
