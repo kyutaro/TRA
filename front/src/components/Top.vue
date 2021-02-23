@@ -47,7 +47,7 @@ export default {
     Modal
   },
   created: function () {
-    axios.get('/api/v1')
+    axios.get(Const.API_PATH)
       .then(response => {
         console.log(response.status)
         response.data.forEach(element => {
