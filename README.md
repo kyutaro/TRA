@@ -1,5 +1,5 @@
 # TRA
 An app that records working hours.
 
-ƒAƒvƒŠ–¼FTimeRecordApp
-—ªÌFTRA
+ã‚¢ãƒ—ãƒªåï¼šTimeRecordApp
+ç•¥ç§°ï¼šTRA
